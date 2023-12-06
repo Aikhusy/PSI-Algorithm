@@ -1,12 +1,14 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MainMenu</title>
+    <title>Form Input</title>
 </head>
 <body>
-    <form id="myForm" action="/result" method="post">
+    <form id="myForm">
         <table>
             <thead>
                 <tr>
@@ -17,13 +19,42 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><input type="text" name="inputArray" placeholder="Contoh: 1" /></td>
-                    <td><input type="text" name="inputArray" placeholder="Contoh: 2" /></td>
+                    <td><input type="text" class="inputArray" placeholder="Contoh: 1" /></td>
+                    <td><input type="text" class="inputArray" placeholder="Contoh: 2" /></td>
                     <!-- Tambahkan inputan untuk kolom baru sesuai kebutuhan -->
                 </tr>
             </tbody>
         </table>
-        <button type="submit">Kirim</button>
+        <button type="button" onclick="submitForm()">Kirim</button>
     </form>
+
+    <script>
+        function submitForm() {
+            var inputArrayElements = document.getElementsByClassName('inputArray');
+            var inputArray = [];
+
+            for (var i = 0; i < inputArrayElements.length; i++) {
+                inputArray.push(inputArrayElements[i].value);
+            }
+
+            var formData = { 'inputArray': inputArray };
+
+            fetch('/process_input', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response if needed
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
 </body>
 </html>
