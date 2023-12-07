@@ -9,7 +9,7 @@
 </head>
 <body>
     <form id="myForm">
-        <table>
+        <table id="yourTableId">
             <thead>
                 <tr>
                     <th>Baris 1</th>
@@ -18,7 +18,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><input type="text" class="inputArray" placeholder="Contoh: 1" /></td>
+                    <td><input type="number" class="inputArray" placeholder="Contoh: 1"  onchange="CreateColumn(this.value)" id="kolom"/></td>
                     <td><input type="text" class="inputArray" placeholder="Contoh: 2" /></td>
                 </tr>
             </tbody>
@@ -40,7 +40,6 @@
     
             var reshapedArray = reshapeArray(dataArray, 2);
             console.log(reshapedArray);
-    
         }
     
         // Fungsi untuk mengatur ulang struktur array
@@ -50,6 +49,19 @@
                 newArr.push(arr.slice(i, i + cols));
             }
             return newArr;
+        }
+
+        function CreateColumn(columnCount){
+            var table = document.getElementById('yourTableId'); // Gantilah 'yourTableId' dengan ID tabel Anda
+
+            // Membuat baris baru
+            var row = table.insertRow();
+
+            // Membuat kolom sebanyak nilai yang dimasukkan
+            for (var i = 0; i < columnCount; i++) {
+                var cell = row.insertCell();
+                cell.innerHTML = "Kolom " + (i + 1);
+            }
         }
     </script>
     
