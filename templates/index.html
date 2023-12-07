@@ -8,21 +8,12 @@
     <title>Form Input</title>
 </head>
 <body>
+    <input type="number" class="inputArray" placeholder="Kolom" onchange="CreateColumn(this.value, document.getElementById('baris').value)" id="kolom" value="1"/>
+    <input type="number" class="inputArray" placeholder="Baris" onchange="CreateColumn(document.getElementById('kolom').value, this.value)" id="baris" value="1"/>       
     <form id="myForm">
-        <table id="yourTableId">
-            <thead>
-                <tr>
-                    <th>Baris 1</th>
-                    <th>Baris 2</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><input type="number" class="inputArray" placeholder="Contoh: 1"  onchange="CreateColumn(this.value)" id="kolom"/></td>
-                    <td><input type="text" class="inputArray" placeholder="Contoh: 2" /></td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="input" id="tempatInput">
+
+        </div>
         <button type="button" onclick="submitForm()">Kirim</button>
     </form>
 
@@ -51,16 +42,44 @@
             return newArr;
         }
 
-        function CreateColumn(columnCount){
-            var table = document.getElementById('yourTableId'); // Gantilah 'yourTableId' dengan ID tabel Anda
+        function perulanganKolom(count,wadah){
+            for (var i = 0; i < count; i++) {
 
-            // Membuat baris baru
-            var row = table.insertRow();
+            var organDalam = document.createElement("input");
+            organDalam.setAttribute("type", "number");
+            organDalam.setAttribute("name", "input");
+            organDalam.setAttribute("id", "input");
+            wadah.appendChild(organDalam);
+            }
+        }
 
-            // Membuat kolom sebanyak nilai yang dimasukkan
-            for (var i = 0; i < columnCount; i++) {
-                var cell = row.insertCell();
-                cell.innerHTML = "Kolom " + (i + 1);
+        function perulaganBaris (countKolom,countBaris,wadah) {  
+            for (var i = 0; i < countBaris; i++) {
+                var spasi = document.createElement("br");
+                perulanganKolom(countKolom,wadah);
+                wadah.appendChild(spasi)
+            }           
+        }
+
+        function CreateColumn(columnCount,rowCount) {
+            
+            deleteElementsById('containerUntukInput')
+            var kulit = document.getElementById('tempatInput');
+
+            var daging = document.createElement("div")
+            daging.setAttribute("name", "containerUntukInput");
+            daging.setAttribute("id", "containerUntukInput");
+            kulit.appendChild(daging)
+
+            perulaganBaris(columnCount,rowCount,daging);
+        }
+        function deleteElementsById(inputName) {
+            var inputElements = document.getElementsByName(inputName);
+            console.log(inputElements)
+            // Menghapus semua elemen dengan atribut name yang sesuai
+            for (var i = 0; i < inputElements.length; i++) {
+                var parentElement = inputElements[i].parentNode;
+                parentElement.removeChild(inputElements[i]);
             }
         }
     </script>
