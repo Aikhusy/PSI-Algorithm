@@ -6,13 +6,15 @@ app = Flask(__name__)
 def home():
     return render_template("index.html")
 
-@app.route('/process_input', methods=['POST'])
-def process_input():
-    data = request.get_json()
-    input_array = data.get('inputArray', [])
+@app.route('/process_data', methods=['POST'])
+
+def process_data():
+    data_from_js = request.json['data']
     
-    # Kirim data ke halaman lain
-    return render_template('result.html', input_data=input_array)
+    # Call the countArray function with the received data
+    result = countArray(data_from_js)
+    
+    return jsonify({'result': result})
 
 if __name__ == '__main__':
     app.run(debug=True)
