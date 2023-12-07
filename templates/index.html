@@ -14,14 +14,12 @@
                 <tr>
                     <th>Baris 1</th>
                     <th>Baris 2</th>
-                    <!-- Tambahkan kolom baru sesuai kebutuhan -->
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td><input type="text" class="inputArray" placeholder="Contoh: 1" /></td>
                     <td><input type="text" class="inputArray" placeholder="Contoh: 2" /></td>
-                    <!-- Tambahkan inputan untuk kolom baru sesuai kebutuhan -->
                 </tr>
             </tbody>
         </table>
@@ -30,31 +28,30 @@
 
     <script>
         function submitForm() {
-            var inputArrayElements = document.getElementsByClassName('inputArray');
-            var inputArray = [];
-
-            for (var i = 0; i < inputArrayElements.length; i++) {
-                inputArray.push(inputArrayElements[i].value);
-            }
-
-            var formData = { 'inputArray': inputArray };
-
-            fetch('/process_input', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Handle the response if needed
-                console.log(data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
+            var inputs = document.querySelectorAll('.inputArray');
+    
+            var dataArray = [];
+    
+            inputs.forEach(function(input) {
+                dataArray.push(input.value);
             });
+    
+            console.log(dataArray);
+    
+            var reshapedArray = reshapeArray(dataArray, 2);
+            console.log(reshapedArray);
+    
+        }
+    
+        // Fungsi untuk mengatur ulang struktur array
+        function reshapeArray(arr, cols) {
+            var newArr = [];
+            for (var i = 0; i < arr.length; i += cols) {
+                newArr.push(arr.slice(i, i + cols));
+            }
+            return newArr;
         }
     </script>
+    
 </body>
 </html>
