@@ -8,10 +8,21 @@
     <title>Form Input</title>
 </head>
 <body>
-    <input type="number" class="columnCreate" placeholder="Kolom" onchange="CreateColumn(this.value, document.getElementById('baris').value)" id="kolom" value="1"/>
-    <input type="number" class="columnCreate" placeholder="Baris" onchange="CreateColumn(document.getElementById('kolom').value, this.value)" id="baris" value="1"/>       
+    <label for="columnCreate">Kolom</label>
+    <label for="rowCreate">Baris</label><br>
+    <input type="number" class="columnCreate" placeholder="KolomBenefit" onchange="CreateBenefitColumn(this.value, document.getElementById('baris').value)" id="kolom" value="1"/>
+    <input type="number" class="rowCreate" placeholder="Baris" onchange="CreateBenefitColumn(document.getElementById('kolom').value, this.value)" id="baris" value="1"/>
+
+    <input type="number" class="columnCreate" placeholder="KolomCost" onchange="CreateCostColumn(this.value, document.getElementById('baris').value)" id="kolom" value="1"/>
+    <input type="number" class="rowCreate" placeholder="Baris" onchange="CreateCostColumn(document.getElementById('kolom').value, this.value)" id="baris" value="1"/>   
     <form id="myForm">
-        <div class="input" id="tempatInput">
+        <label for="">tempat Input Benefit</label> <br>
+        <div class="input" id="tempatInputBenefit">
+
+        </div>
+
+        <label for="">tempat Input cost</label> <br>
+        <div class="input" id="tempatInputCost">
 
         </div>
         <button type="button" onclick="submitForm()">Kirim</button>
@@ -48,6 +59,8 @@
             resultElement.innerHTML = 'Result: ' + result;
         }
 
+        
+
         function submitForm() {
             var inputs = document.querySelectorAll('.inputArray');
             var totalColumn= document.getElementById('kolom').value;
@@ -71,39 +84,78 @@
             return reshapedArray;
         }
 
-
-        function perulanganKolom(count,wadah){
+        //pfungsi untu membuat kolom cost
+        function perulanganKolomCost(count,wadah){
             for (var i = 0; i < count; i++) {
 
             var organDalam = document.createElement("input");
             organDalam.setAttribute("type", "number");
-            organDalam.setAttribute("name", "inputArray");
-            organDalam.setAttribute("class", "inputArray");
+            organDalam.setAttribute("name", "inputArrayCost");
+            organDalam.setAttribute("class", "inputArrayCost");
             organDalam.setAttribute("value", "1");
-            organDalam.setAttribute("id", "input");
+            organDalam.setAttribute("id", "inputCost");
             wadah.appendChild(organDalam);
             }
         }
 
-        function perulaganBaris (countKolom,countBaris,wadah) {  
+        function perulaganBarisCost (countKolom,countBaris,wadah) {  
             for (var i = 0; i < countBaris; i++) {
                 var spasi = document.createElement("br");
-                perulanganKolom(countKolom,wadah);
+                perulanganKolomCost(countKolom,wadah);
                 wadah.appendChild(spasi)
             }           
         }
-
-        function CreateColumn(columnCount,rowCount) {
+        // handler untuk membuat kolom Cost
+        function CreateCostColumn(columnCount,rowCount) {
             
             deleteElementsById('containerUntukInput')
-            var kulit = document.getElementById('tempatInput');
+            var kulit = document.getElementById('tempatInputCost');
 
             var daging = document.createElement("div")
             daging.setAttribute("name", "containerUntukInput");
             daging.setAttribute("id", "containerUntukInput");
             kulit.appendChild(daging)
 
-            perulaganBaris(columnCount,rowCount,daging);
+            perulaganBarisCost(columnCount,rowCount,daging);
+        }
+
+        function getCostElement(){
+            var inputs = document.querySelectorAll('.inputArrayCost');
+            var totalColumn= document.getElementById('kolomCost').value;
+            var dataArray = [];
+    
+            inputs.forEach(function(input) {
+                dataArray.push(input.value);
+            });
+    
+            var reshapedArray = reshapeArray(dataArray,totalColumn);
+            return reshapedArray;
+        }
+        
+        function normalizedCostElement(array){
+            var normalized = [];
+            var minValue=[];
+
+            
+                for (var colum=0;colum<array[0].length;colum++){
+                    min =10000;
+                    //getting the min value
+                    for (var row=0;row<array.length;row++){
+                        if (array[row][colum]<min){
+                            min=array[row][colum];
+                        }
+                    }
+                    minValue[colum]=min;
+                }
+            
+
+            for (var row=0;row<array.length;row++){
+                for (var colum=0;colum<array[0].length;colum++){
+                    //count the normalizer
+                    normalized[row][colum]=minValue/array[row][colum];
+                }
+            }
+            return normalized;
         }
         function deleteElementsById(inputName) {
             var inputElements = document.getElementsByName(inputName);
