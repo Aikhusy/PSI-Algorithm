@@ -43,21 +43,23 @@
     </form>
     <div id="result"></div>
     <script>
-        function callPythonFunction(inputArray) {
-            // Array yang ingin Anda proses
-
+        function sendArrayToPython(inputArray) {
             // Kirim array ke server Flask menggunakan AJAX
             fetch('/process_array', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json;charset=UTF-8',
                 },
                 body: JSON.stringify({ array: inputArray }),
             })
             .then(response => response.json())
             .then(data => {
                 // Handle the response from the server
-                console.log('Result from Python:', data.result);
+                console.log('Data from Python:', data);
+
+                // Akses properti objek JSON secara terpisah
+
+                // Lakukan operasi atau manipulasi data di sini
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -129,8 +131,8 @@
             console.log("BENEFIT",reshapedBenefit);
             
             var merged=merge2DArrays(normalizedBenefit,normalizedCost);
-            console.log(merged  )
-            callPythonFunction(merged)
+            console.log(merged)
+            sendArrayToPython(merged)
         }
     
         // Fungsi untuk mengatur ulang struktur array

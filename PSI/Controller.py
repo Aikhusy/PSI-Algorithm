@@ -44,16 +44,16 @@ def countResult(array, priorityWeight):
 
 def main(array):
     # konversi ke numpy
-    normalisasi = toNumpy(array)
+    normalisasi = toNumpy(array)#tolist
     # menghitung rata rata
     averages = average(normalisasi)
     # menghitung variansi preverensi
-    varians = variansiPreferensi(normalisasi, averages)
-    vSum = simpangan(varians)
-    weight = priorityWeight(vSum)
+    varians = variansiPreferensi(normalisasi, averages)#tolist
+    vSum = simpangan(varians)#tolist
+    weight = priorityWeight(vSum)#tolist
     # menghitung simpangan nilai preferensi
     # menghitung nilai tiap alternatif
-    result = countResult(normalisasi, weight)
+    result = countResult(normalisasi, weight)#tolist
     # menghitung perangkingan
     hSum = horizontalSum(result)
     
@@ -63,6 +63,8 @@ def main(array):
             "varians": varians.tolist(), 
             "vSum": vSum.tolist(), 
             "weight": weight.tolist(), 
-            "result": result.tolist(), 
-            "hSum": hSum.tolist()
+            "result": result.tolist(),
+            "hSum": hSum
             }
+            
+            

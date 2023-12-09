@@ -10,13 +10,14 @@ def home():
 
 @app.route('/process_array', methods=['POST'])
 def process_array():
-    data = request.json  # Ambil data JSON dari permintaan
+    data = request.json
+    mergedData= data.get('array')  # Ambil data JSON dari permintaan
 
     # Panggil fungsi Python untuk memproses array
-    result = main(data)
+    result = main(mergedData)
 
     # Return the result as JSON
-    return jsonify(result=result)
+    return jsonify(result)
 
 if __name__ == '__main__':
     app.run(debug=True)
