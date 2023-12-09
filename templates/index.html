@@ -44,26 +44,25 @@
     <div id="result"></div>
     <script>
         function callPythonFunction(inputArray) {
-                    // Array yang ingin Anda proses
+            // Array yang ingin Anda proses
 
-                    // Kirim array ke server Flask menggunakan AJAX
-                    fetch('/process_array', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ array: inputArray }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        // Handle the response from the server
-                        displayResult(data.result);
-                        console.log('Result from Python:', data.result);
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-                }
+            // Kirim array ke server Flask menggunakan AJAX
+            fetch('/process_array', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ array: inputArray }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response from the server
+                console.log('Result from Python:', data.result);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
 
         function displayResult(result,place) {
             // Update the HTML element with the result
@@ -128,19 +127,10 @@
             var normalizedBenefit=normalizedBenefitElement(floatBenefit);
             displayResult(normalizedBenefit,"hasilBenefit");
             console.log("BENEFIT",reshapedBenefit);
-
-
-            // var inputs = document.querySelectorAll('.inputArray');
-            // var totalColumn= document.getElementById('kolom').value;
-            // var dataArray = [];
-    
-            // inputs.forEach(function(input) {
-            //     dataArray.push(input.value);
-            // });
-    
-            //var reshapedArray = reshapeArray(dataArray,totalColumn);
-            //console.log(reshapedArray);
-            //callPythonFunction(reshapedArray);
+            
+            var merged=merge2DArrays(normalizedBenefit,normalizedCost);
+            console.log(merged  )
+            callPythonFunction(merged)
         }
     
         // Fungsi untuk mengatur ulang struktur array
@@ -326,6 +316,29 @@
                 var parentElement = inputElements[i].parentNode;
                 parentElement.removeChild(inputElements[i]);
             }
+        }
+
+        function merge2DArrays(array1, array2) {
+            // Pengecekan jika salah satu array kosong
+            if (array1.length === 0) {
+                return array2;
+            } else if (array2.length === 0) {
+                return array1;
+            }
+
+            // Memeriksa apakah jumlah baris array sama
+            if (array1.length !== array2.length) {
+                console.error("Jumlah baris kedua array harus sama.");
+                return null;
+            }
+
+            // Menggabungkan dua array 2D
+            const mergedArray = [];
+            for (let i = 0; i < array1.length; i++) {
+                mergedArray.push([...array1[i], ...array2[i]]);
+            }
+
+            return mergedArray;
         }
     </script>
     
