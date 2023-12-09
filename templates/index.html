@@ -124,7 +124,8 @@
             
             
             var reshapedBenefit = getBenefitElement();
-            var normalizedBenefit=normalizedBenefitElement(reshapedCost);
+            var floatBenefit = parseStringArrayToFloat(reshapedBenefit);
+            var normalizedBenefit=normalizedBenefitElement(floatBenefit);
             displayResult(normalizedBenefit,"hasilBenefit");
             console.log("BENEFIT",reshapedBenefit);
 
@@ -200,6 +201,10 @@
         }
         
         function normalizedCostElement(array) {
+            if (array == null) {
+                // Your code here
+                return null;
+            }
             // Pastikan array tidak kosong
             if (array.length === 0 || array[0].length === 0) {
                 console.error('Array tidak valid untuk normalisasi.');
@@ -283,25 +288,31 @@
             return reshapedArray;
         }
         
-        function normalizedCostElement(array){
-            var normalized = [];
+        function normalizedBenefitElement(array){
+            if (array.length === 0 || array[0].length === 0) {
+                console.error('Array tidak valid untuk normalisasi.');
+                return null;
+            }
+            console.log(array[0][1]);
+            let normalized = Array.from({ length: array.length }, () => Array(array[0].length).fill(0));
             var maxValue=[];
 
             
                 for (var colum=0;colum<array[0].length;colum++){
                     max =0;
                     //getting the max value
-                    for (var row=0;row>array.length;row++){
-                        if (array[row][colum]<min){
-                            min=array[row][colum];
+                    for (var row=0;row<array.length;row++){
+                        if (array[row][colum]>max){
+                            max=array[row][colum];
                         }
                     }
                     maxValue[colum]=max;
                 }
+                console.log(maxValue)
             for (var row=0;row<array.length;row++){
                 for (var colum=0;colum<array[0].length;colum++){
                     //count the normalizer
-                    normalized[row][colum]=array[row][colum]/maxValue;
+                    normalized[row][colum]=array[row][colum]/maxValue[colum];
                 }
             }
             return normalized;
