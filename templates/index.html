@@ -38,11 +38,18 @@
 
         </div>
         <button type="button" onclick="submitForm()">Kirim</button>
-
-        
     </form>
-    <div id="result"></div>
+    <div id="result">
+
+    </div>
     <script>
+        function createElement(wadah,nama) {
+            var tempat = document.getElementById(wadah);
+            var elemen = document.createElement('div');
+            elemen.setAttribute("name", nama);
+            elemen.setAttribute("id", nama);
+            tempat.appendChild(elemen)
+        }
         function sendArrayToPython(inputArray) {
             // Kirim array ke server Flask menggunakan AJAX
             fetch('/process_array', {
@@ -57,6 +64,34 @@
                 // Handle the response from the server
                 console.log('Data from Python:', data);
 
+                var normalisasi = data.normalisasi;
+                console.log (data.normalisasi);
+                createElement("result",'normalisasi');
+                displayResult(normalisasi,'normalisasi');
+
+                var averages = data.averages;
+                createElement("result",'average');
+                displayResult(averages,'average');
+
+                var varians = data.varians;
+                createElement("result",'varians');
+                displayResult(varians,'varians');
+
+                var vSum = data.vSum;
+                createElement("result",'vSum');
+                displayResult(vSum,'vSum');
+
+                var weight = data.weight;
+                createElement("result",'weight');
+                displayResult(weight,'weight');
+
+                var result = data.result;
+                createElement("result",'results');
+                displayResult(result,'results');
+
+                var hSum = data.hSum;
+                createElement("result",'hsum');
+                displayResult(hSum,'hsum');
                 // Akses properti objek JSON secara terpisah
 
                 // Lakukan operasi atau manipulasi data di sini
@@ -66,10 +101,21 @@
             });
         }
 
-        function displayResult(result,place) {
+        function displayResult(result, place) {
             // Update the HTML element with the result
             let resultElement = document.getElementById(place);
-            resultElement.innerHTML = 'Result: ' + result;
+            resultElement.innerHTML = 'Result:<br>';
+
+            // Check if result is a 2D array
+            if (Array.isArray(result[0]) && Array.isArray(result[0][0])) {
+                // Loop through the 2D array and display each array with <br> separator
+                for (let i = 0; i < result.length; i++) {
+                    resultElement.innerHTML += result[i].join(', ') + '<br>';
+                }
+            } else {
+                // If it's a 1D array, display it directly
+                resultElement.innerHTML += result.join(', ') + '<br>';
+            }
         }
 
         function parseStringArrayToFloat(inputArray) {
@@ -120,7 +166,7 @@
             var floatCost = parseStringArrayToFloat(reshapedCost)
             console.log("COST",floatCost);
             var normalizedCost=normalizedCostElement(floatCost);
-            
+
             displayResult(normalizedCost,"hasilCost");
             
             
