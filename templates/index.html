@@ -1,97 +1,113 @@
-<!-- index.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Input</title>
-</head>
-<body>
-    <label for="columnCreate">Kolom</label>
-    <label for="rowCreate">Baris</label>
-    <br>
+{% extends "base.html" %}
+{% block content %}
+<div class="calculator-title text-center">
+    <h1>PSI Calculator</h1>
+</div>
 
-    <label for="">Benefit</label>
-    <br>
+<div class="container-create">
+    <div class="benefit">
+        <h2>Benefit</h2>
+        <h3>Masukkan Jumlah Kriteria</h3>
+        <input type="number" class="columnCreate" placeholder="KolomBenefit"
+            onchange="CreateBenefitColumn(this.value, document.getElementById('BarisBenefit').value)" id="KolomBenefit"
+            value="1" />
+            <br>
+        <h3>Masukkan Jumlah Alternatif</h3>
+        <input type="number" class="rowCreate" placeholder="BarisBenefit"
+            onchange="CreateBenefitColumn(document.getElementById('KolomBenefit').value, this.value)" id="BarisBenefit"
+            value="1" />
+    </div>
 
-    <input type="number" class="columnCreate" placeholder="KolomBenefit" onchange="CreateBenefitColumn(this.value, document.getElementById('BarisBenefit').value)" id="KolomBenefit" value="1"/>
-    <input type="number" class="rowCreate" placeholder="BarisBenefit" onchange="CreateBenefitColumn(document.getElementById('KolomBenefit').value, this.value)" id="BarisBenefit" value="1"/>
-    <br>
+    <div class="cost">
+        <h2>Cost</h2>
+        <h3>Masukkan Jumlah Kriteria</h3>
+        <input type="number" class="columnCreate" placeholder="KolomCost"
+            onchange="CreateCostColumn(this.value, document.getElementById('BarisCost').value)" id="KolomCost"
+            value="1" />
+        <br>
+        <h3>Masukkan Jumlah Alternatif</h3>
+        <input type="number" class="rowCreate" placeholder="BarisCost"
+            onchange="CreateCostColumn(document.getElementById('KolomCost').value, this.value)" id="BarisCost"
+            value="1" />
+    </div>
+</div>
 
-    <label for="">Cost</label><br>
-    <input type="number" class="columnCreate" placeholder="KolomCost" onchange="CreateCostColumn(this.value, document.getElementById('BarisCost').value)" id="KolomCost" value="1"/>
-    <input type="number" class="rowCreate" placeholder="BarisCost" onchange="CreateCostColumn(document.getElementById('KolomCost').value, this.value)" id="BarisCost" value="1"/>   
-    <form id="myForm">
-        <label for="">tempat Input Benefit</label> <br>
+
+<form id="myForm">
+    <div class="input-benefit">
+        <h3>Tempat Input Benefit</h3>
         <div class="input" id="tempatInputBenefit">
 
         </div>
         <div class="input" id="hasilBenefit">
 
         </div>
-        <label for="">tempat Input cost</label> <br>
+    </div>
+    <div class="input-cost">
+        <h3>Tempat Input Cost</h3>
         <div class="input" id="tempatInputCost">
 
         </div>
         <div class="input" id="hasilCost">
 
         </div>
-        <button type="button" onclick="submitForm()">Kirim</button>
-    </form>
-    <div id="result">
-
     </div>
-    <script>
-        function createElement(wadah,nama) {
-            var tempat = document.getElementById(wadah);
-            var elemen = document.createElement('div');
-            elemen.setAttribute("name", nama);
-            elemen.setAttribute("id", nama);
-            tempat.appendChild(elemen)
-        }
-        function sendArrayToPython(inputArray) {
-            // Kirim array ke server Flask menggunakan AJAX
-            fetch('/process_array', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json;charset=UTF-8',
-                },
-                body: JSON.stringify({ array: inputArray }),
-            })
+    <button type="button" class="btn btn-outline-success" onclick="submitForm()">Perhitungan</button>
+</form>
+
+<div id="result">
+
+</div>
+<script>
+    function createElement(wadah, nama) {
+        var tempat = document.getElementById(wadah);
+        var elemen = document.createElement('div');
+        elemen.setAttribute("name", nama);
+        elemen.setAttribute("id", nama);
+        tempat.appendChild(elemen)
+    }
+    function sendArrayToPython(inputArray) {
+        // Kirim array ke server Flask menggunakan AJAX
+        fetch('/process_array', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+            },
+            body: JSON.stringify({ array: inputArray }),
+        })
             .then(response => response.json())
             .then(data => {
                 // Handle the response from the server
                 console.log('Data from Python:', data);
 
                 var normalisasi = data.normalisasi;
-                console.log (data.normalisasi);
-                createElement("result",'normalisasi');
-                displayResult(normalisasi,'normalisasi');
+                console.log(data.normalisasi);
+                createElement("result", 'normalisasi');
+                displayResult(normalisasi, 'normalisasi');
 
                 var averages = data.averages;
-                createElement("result",'average');
-                displayResult(averages,'average');
+                createElement("result", 'average');
+                displayResult(averages, 'average');
 
                 var varians = data.varians;
-                createElement("result",'varians');
-                displayResult(varians,'varians');
+                createElement("result", 'varians');
+                displayResult(varians, 'varians');
 
                 var vSum = data.vSum;
-                createElement("result",'vSum');
-                displayResult(vSum,'vSum');
+                createElement("result", 'vSum');
+                displayResult(vSum, 'vSum');
 
                 var weight = data.weight;
-                createElement("result",'weight');
-                displayResult(weight,'weight');
+                createElement("result", 'weight');
+                displayResult(weight, 'weight');
 
                 var result = data.result;
-                createElement("result",'results');
-                displayResult(result,'results');
+                createElement("result", 'results');
+                displayResult(result, 'results');
 
                 var hSum = data.hSum;
-                createElement("result",'hsum');
-                displayResult(hSum,'hsum');
+                createElement("result", 'hsum');
+                displayResult(hSum, 'hsum');
                 // Akses properti objek JSON secara terpisah
 
                 // Lakukan operasi atau manipulasi data di sini
@@ -99,100 +115,123 @@
             .catch(error => {
                 console.error('Error:', error);
             });
-        }
+    }
 
-        function displayResult(result, place) {
-            // Update the HTML element with the result
-            let resultElement = document.getElementById(place);
-            resultElement.innerHTML = 'Result:<br>';
+    function displayResult(result, place) {
+        // Update the HTML element with the result
+        let resultElement = document.getElementById(place);
+        resultElement.innerHTML = "";
 
-            // Check if result is a 2D array
-            if (Array.isArray(result[0]) && Array.isArray(result[0][0])) {
-                // Loop through the 2D array and display each array with <br> separator
-                for (let i = 0; i < result.length; i++) {
-                    resultElement.innerHTML += result[i].join(', ') + '<br>';
+        // Check if result is a 2D array
+        if (Array.isArray(result[0]) && Array.isArray(result[0][0])) {
+            // Loop through the 2D array and display each array with <br> separator
+            let table = document.createElement("table");
+            table.classList.add("table"); // Add a class for styling
+            table.classList.add("table-striped");
+            for (let i = 0; i < result.length; i++) {
+                // resultElement.innerHTML += result[i].join(', ') + '<br>';
+                let row = document.createElement("tr");
+                for (let j = 0; j < result[i].length; j++) {
+                    let cell = document.createElement("td");
+                    cell.textContent = result[i][j];
+                    cell.style.border = "1px solid"
+                    row.appendChild(cell);
                 }
-            } else {
-                // If it's a 1D array, display it directly
-                resultElement.innerHTML += result.join(', ') + '<br>';
+                table.appendChild(row);
             }
+            // Append the table to the result element
+            resultElement.appendChild(table);
+        } else {
+            // If it's a 1D array, display it directly
+            // resultElement.innerHTML += result.join(', ') + '<br>';
+            let list = document.createElement("ul");
+            list.classList.add("result-list"); // Add a class for styling
+            // Loop through the 1D array and create list items
+            for (let i = 0; i < result.length; i++) {
+                let item = document.createElement("li");
+                item.textContent = result[i];
+                list.appendChild(item);
+            }
+            // Append the list to the result element
+            resultElement.appendChild(list);
+        }
+    }
+
+    function parseStringArrayToFloat(inputArray) {
+        // Mengecek apakah inputArray adalah array dan memiliki elemen
+        if (!Array.isArray(inputArray) || inputArray.length === 0) {
+            console.error('Input harus berupa array yang tidak kosong.');
+            return null;
         }
 
-        function parseStringArrayToFloat(inputArray) {
-            // Mengecek apakah inputArray adalah array dan memiliki elemen
-            if (!Array.isArray(inputArray) || inputArray.length === 0) {
-                console.error('Input harus berupa array yang tidak kosong.');
+        // Membuat array hasil yang akan diisi dengan nilai float
+        let resultArray = [];
+
+        // Melakukan iterasi pada setiap elemen array input
+        for (let i = 0; i < inputArray.length; i++) {
+            // Mengecek apakah setiap elemen adalah array
+            if (!Array.isArray(inputArray[i])) {
+                console.error('Setiap elemen input harus berupa array.');
                 return null;
             }
 
-            // Membuat array hasil yang akan diisi dengan nilai float
-            let resultArray = [];
+            // Membuat array temporer untuk menyimpan nilai float dari setiap elemen array input
+            let floatArray = [];
 
-            // Melakukan iterasi pada setiap elemen array input
-            for (let i = 0; i < inputArray.length; i++) {
-                // Mengecek apakah setiap elemen adalah array
-                if (!Array.isArray(inputArray[i])) {
-                    console.error('Setiap elemen input harus berupa array.');
+            // Melakukan iterasi pada setiap elemen dalam subarray
+            for (let j = 0; j < inputArray[i].length; j++) {
+                // Mengubah string menjadi float, jika tidak dapat diubah, kembalikan null
+                let floatValue = parseFloat(inputArray[i][j]);
+                if (isNaN(floatValue)) {
+                    console.error(`Nilai '${inputArray[i][j]}' pada posisi [${i}][${j}] tidak dapat diubah menjadi float.`);
                     return null;
                 }
 
-                // Membuat array temporer untuk menyimpan nilai float dari setiap elemen array input
-                let floatArray = [];
-
-                // Melakukan iterasi pada setiap elemen dalam subarray
-                for (let j = 0; j < inputArray[i].length; j++) {
-                    // Mengubah string menjadi float, jika tidak dapat diubah, kembalikan null
-                    let floatValue = parseFloat(inputArray[i][j]);
-                    if (isNaN(floatValue)) {
-                        console.error(`Nilai '${inputArray[i][j]}' pada posisi [${i}][${j}] tidak dapat diubah menjadi float.`);
-                        return null;
-                    }
-
-                    // Menambahkan nilai float ke dalam array temporer
-                    floatArray.push(floatValue);
-                }
-
-                // Menambahkan array temporer ke dalam array hasil
-                resultArray.push(floatArray);
+                // Menambahkan nilai float ke dalam array temporer
+                floatArray.push(floatValue);
             }
 
-            return resultArray;
+            // Menambahkan array temporer ke dalam array hasil
+            resultArray.push(floatArray);
         }
 
-        function submitForm() {
-            
-            var reshapedCost = getCostElement();
-            console.log("COST",reshapedCost);
-            var floatCost = parseStringArrayToFloat(reshapedCost)
-            console.log("COST",floatCost);
-            var normalizedCost=normalizedCostElement(floatCost);
+        return resultArray;
+    }
 
-            displayResult(normalizedCost,"hasilCost");
-            
-            
-            var reshapedBenefit = getBenefitElement();
-            var floatBenefit = parseStringArrayToFloat(reshapedBenefit);
-            var normalizedBenefit=normalizedBenefitElement(floatBenefit);
-            displayResult(normalizedBenefit,"hasilBenefit");
-            console.log("BENEFIT",reshapedBenefit);
-            
-            var merged=merge2DArrays(normalizedBenefit,normalizedCost);
-            console.log(merged)
-            sendArrayToPython(merged)
+    function submitForm() {
+
+        var reshapedCost = getCostElement();
+        console.log("COST", reshapedCost);
+        var floatCost = parseStringArrayToFloat(reshapedCost)
+        console.log("COST", floatCost);
+        var normalizedCost = normalizedCostElement(floatCost);
+
+        displayResult(normalizedCost, "hasilCost");
+
+
+        var reshapedBenefit = getBenefitElement();
+        var floatBenefit = parseStringArrayToFloat(reshapedBenefit);
+        var normalizedBenefit = normalizedBenefitElement(floatBenefit);
+        displayResult(normalizedBenefit, "hasilBenefit");
+        console.log("BENEFIT", reshapedBenefit);
+
+        var merged = merge2DArrays(normalizedBenefit, normalizedCost);
+        console.log(merged)
+        sendArrayToPython(merged)
+    }
+
+    // Fungsi untuk mengatur ulang struktur array
+    function reshapeArray(dataArray, totalColumn) {
+        let reshapedArray = [];
+        for (var i = 0; i < dataArray.length; i += parseInt(totalColumn)) {
+            reshapedArray.push(dataArray.slice(i, i + parseInt(totalColumn)));
         }
-    
-        // Fungsi untuk mengatur ulang struktur array
-        function reshapeArray(dataArray, totalColumn) {
-            let reshapedArray = [];
-            for (var i = 0; i < dataArray.length; i += parseInt(totalColumn)) {
-                reshapedArray.push(dataArray.slice(i, i + parseInt(totalColumn)));
-            }
-            return reshapedArray;
-        }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-        //fungsi untu membuat kolom cost
-        function perulanganKolomCost(count,wadah){
-            for (var i = 0; i < count; i++) {
+        return reshapedArray;
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    //fungsi untu membuat kolom cost
+    function perulanganKolomCost(count, wadah) {
+        for (var i = 0; i < count; i++) {
 
             var organDalam = document.createElement("input");
             organDalam.setAttribute("type", "number");
@@ -201,86 +240,86 @@
             organDalam.setAttribute("value", "1");
             organDalam.setAttribute("id", "inputCost");
             wadah.appendChild(organDalam);
-            }
+        }
+    }
+
+    function perulaganBarisCost(countKolom, countBaris, wadah) {
+        for (var i = 0; i < countBaris; i++) {
+            var spasi = document.createElement("br");
+            perulanganKolomCost(countKolom, wadah);
+            wadah.appendChild(spasi)
+        }
+    }
+    // handler untuk membuat kolom Cost
+    function CreateCostColumn(columnCount, rowCount) {
+
+        deleteElementsById('containerUntukInputCost')
+        var kulit = document.getElementById('tempatInputCost');
+
+        var daging = document.createElement("div")
+        daging.setAttribute("name", "containerUntukInputCost");
+        daging.setAttribute("id", "containerUntukInputCost");
+        kulit.appendChild(daging)
+
+        perulaganBarisCost(columnCount, rowCount, daging);
+    }
+
+    function getCostElement() {
+        let inputss = document.querySelectorAll('.inputArrayCost');
+        let totalColumn = document.getElementById('KolomCost').value;
+        let dataArray = [];
+
+        inputss.forEach(function (input) {
+            dataArray.push(input.value);
+        });
+
+        let reshapedArray = reshapeArray(dataArray, totalColumn);
+        return reshapedArray;
+    }
+
+    function normalizedCostElement(array) {
+        if (array == null) {
+            // Your code here
+            return null;
+        }
+        // Pastikan array tidak kosong
+        if (array.length === 0 || array[0].length === 0) {
+            console.error('Array tidak valid untuk normalisasi.');
+            return null;
         }
 
-        function perulaganBarisCost (countKolom,countBaris,wadah) {  
-            for (var i = 0; i < countBaris; i++) {
-                var spasi = document.createElement("br");
-                perulanganKolomCost(countKolom,wadah);
-                wadah.appendChild(spasi)
-            }           
-        }
-        // handler untuk membuat kolom Cost
-        function CreateCostColumn(columnCount,rowCount) {
-            
-            deleteElementsById('containerUntukInputCost')
-            var kulit = document.getElementById('tempatInputCost');
+        let normalized = Array.from({ length: array.length }, () => Array(array[0].length).fill(0));
+        let minValue = [];
 
-            var daging = document.createElement("div")
-            daging.setAttribute("name", "containerUntukInputCost");
-            daging.setAttribute("id", "containerUntukInputCost");
-            kulit.appendChild(daging)
+        for (let colum = 0; colum < array[0].length; colum++) {
+            let min = 10000;
 
-            perulaganBarisCost(columnCount,rowCount,daging);
-        }
-
-        function getCostElement(){
-            let inputss = document.querySelectorAll('.inputArrayCost');
-            let totalColumn= document.getElementById('KolomCost').value;
-            let dataArray = [];
-    
-            inputss.forEach(function(input) {
-                dataArray.push(input.value);
-            });
-    
-            let reshapedArray = reshapeArray(dataArray,totalColumn);
-            return reshapedArray;
-        }
-        
-        function normalizedCostElement(array) {
-            if (array == null) {
-                // Your code here
-                return null;
-            }
-            // Pastikan array tidak kosong
-            if (array.length === 0 || array[0].length === 0) {
-                console.error('Array tidak valid untuk normalisasi.');
-                return null;
-            }
-
-            let normalized = Array.from({ length: array.length }, () => Array(array[0].length).fill(0));
-            let minValue = [];
-
-            for (let colum = 0; colum < array[0].length; colum++) {
-                let min = 10000;
-
-                // Mendapatkan nilai minimum
-                for (let row = 0; row < array.length; row++) {
-                    if (array[row][colum] < min) {
-                        min = array[row][colum];
-                    }
-                }
-
-                minValue[colum] = min;
-            }
-            console.log('Min Values:', minValue);
-
+            // Mendapatkan nilai minimum
             for (let row = 0; row < array.length; row++) {
-                for (let colum = 0; colum < array[0].length; colum++) {
-                    // Menghitung normalizer
-                    normalized[row][colum] = minValue[colum] / array[row][colum];
+                if (array[row][colum] < min) {
+                    min = array[row][colum];
                 }
             }
 
-            return normalized;
+            minValue[colum] = min;
+        }
+        console.log('Min Values:', minValue);
+
+        for (let row = 0; row < array.length; row++) {
+            for (let colum = 0; colum < array[0].length; colum++) {
+                // Menghitung normalizer
+                normalized[row][colum] = minValue[colum] / array[row][colum];
+            }
         }
 
+        return normalized;
+    }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-        //fungsi untu membuat kolom Benefit
-        function perulanganKolomBenefit(count,wadah){
-            for (var i = 0; i < count; i++) {
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    //fungsi untu membuat kolom Benefit
+    function perulanganKolomBenefit(count, wadah) {
+        for (var i = 0; i < count; i++) {
 
             var organDalam = document.createElement("input");
             organDalam.setAttribute("type", "number");
@@ -289,106 +328,106 @@
             organDalam.setAttribute("value", "1");
             organDalam.setAttribute("id", "inputBenefit");
             wadah.appendChild(organDalam);
-            }
         }
+    }
 
-        function perulaganBarisBenefit (countKolom,countBaris,wadah) {  
-            for (var i = 0; i < countBaris; i++) {
-                var spasi = document.createElement("br");
-                perulanganKolomBenefit(countKolom,wadah);
-                wadah.appendChild(spasi)
-            }           
+    function perulaganBarisBenefit(countKolom, countBaris, wadah) {
+        for (var i = 0; i < countBaris; i++) {
+            var spasi = document.createElement("br");
+            perulanganKolomBenefit(countKolom, wadah);
+            wadah.appendChild(spasi)
         }
-        // handler untuk membuat kolom Benefit
-        function CreateBenefitColumn(columnCount,rowCount) {
-            
-            deleteElementsById('containerUntukInputBenefit')
-            var kulit = document.getElementById('tempatInputBenefit');
+    }
+    // handler untuk membuat kolom Benefit
+    function CreateBenefitColumn(columnCount, rowCount) {
 
-            var daging = document.createElement("div")
-            daging.setAttribute("name", "containerUntukInputBenefit");
-            daging.setAttribute("id", "containerUntukInputBenefit");
-            kulit.appendChild(daging)
+        deleteElementsById('containerUntukInputBenefit')
+        var kulit = document.getElementById('tempatInputBenefit');
 
-            perulaganBarisBenefit(columnCount,rowCount,daging);
+        var daging = document.createElement("div")
+        daging.setAttribute("name", "containerUntukInputBenefit");
+        daging.setAttribute("id", "containerUntukInputBenefit");
+        kulit.appendChild(daging)
+
+        perulaganBarisBenefit(columnCount, rowCount, daging);
+    }
+
+    function getBenefitElement() {
+        let inputs = document.querySelectorAll('.inputArrayBenefit');
+        let totalColumn = document.getElementById('KolomBenefit').value;
+        let dataArray = [];
+
+        inputs.forEach(function (input) {
+            dataArray.push(input.value);
+        });
+
+        let reshapedArray = reshapeArray(dataArray, totalColumn);
+        return reshapedArray;
+    }
+
+    function normalizedBenefitElement(array) {
+        if (array.length === 0 || array[0].length === 0) {
+            console.error('Array tidak valid untuk normalisasi.');
+            return null;
         }
+        console.log(array[0][1]);
+        let normalized = Array.from({ length: array.length }, () => Array(array[0].length).fill(0));
+        var maxValue = [];
 
-        function getBenefitElement(){
-            let inputs = document.querySelectorAll('.inputArrayBenefit');
-            let totalColumn= document.getElementById('KolomBenefit').value;
-            let dataArray = [];
-    
-            inputs.forEach(function(input) {
-                dataArray.push(input.value);
-            });
-    
-            let reshapedArray = reshapeArray(dataArray,totalColumn);
-            return reshapedArray;
-        }
-        
-        function normalizedBenefitElement(array){
-            if (array.length === 0 || array[0].length === 0) {
-                console.error('Array tidak valid untuk normalisasi.');
-                return null;
-            }
-            console.log(array[0][1]);
-            let normalized = Array.from({ length: array.length }, () => Array(array[0].length).fill(0));
-            var maxValue=[];
 
-            
-                for (var colum=0;colum<array[0].length;colum++){
-                    max =0;
-                    //getting the max value
-                    for (var row=0;row<array.length;row++){
-                        if (array[row][colum]>max){
-                            max=array[row][colum];
-                        }
-                    }
-                    maxValue[colum]=max;
-                }
-                console.log(maxValue)
-            for (var row=0;row<array.length;row++){
-                for (var colum=0;colum<array[0].length;colum++){
-                    //count the normalizer
-                    normalized[row][colum]=array[row][colum]/maxValue[colum];
+        for (var colum = 0; colum < array[0].length; colum++) {
+            max = 0;
+            //getting the max value
+            for (var row = 0; row < array.length; row++) {
+                if (array[row][colum] > max) {
+                    max = array[row][colum];
                 }
             }
-            return normalized;
+            maxValue[colum] = max;
         }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-        function deleteElementsById(inputName) {
-            var inputElements = document.getElementsByName(inputName);
-            console.log(inputElements)
-            // Menghapus semua elemen dengan atribut name yang sesuai
-            for (var i = 0; i < inputElements.length; i++) {
-                var parentElement = inputElements[i].parentNode;
-                parentElement.removeChild(inputElements[i]);
+        console.log(maxValue)
+        for (var row = 0; row < array.length; row++) {
+            for (var colum = 0; colum < array[0].length; colum++) {
+                //count the normalizer
+                normalized[row][colum] = array[row][colum] / maxValue[colum];
             }
         }
-
-        function merge2DArrays(array1, array2) {
-            // Pengecekan jika salah satu array kosong
-            if (array1.length === 0) {
-                return array2;
-            } else if (array2.length === 0) {
-                return array1;
-            }
-
-            // Memeriksa apakah jumlah baris array sama
-            if (array1.length !== array2.length) {
-                console.error("Jumlah baris kedua array harus sama.");
-                return null;
-            }
-
-            // Menggabungkan dua array 2D
-            const mergedArray = [];
-            for (let i = 0; i < array1.length; i++) {
-                mergedArray.push([...array1[i], ...array2[i]]);
-            }
-
-            return mergedArray;
+        return normalized;
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    function deleteElementsById(inputName) {
+        var inputElements = document.getElementsByName(inputName);
+        console.log(inputElements)
+        // Menghapus semua elemen dengan atribut name yang sesuai
+        for (var i = 0; i < inputElements.length; i++) {
+            var parentElement = inputElements[i].parentNode;
+            parentElement.removeChild(inputElements[i]);
         }
-    </script>
-    
-</body>
-</html>
+    }
+
+    function merge2DArrays(array1, array2) {
+        // Pengecekan jika salah satu array kosong
+        if (array1.length === 0) {
+            return array2;
+        } else if (array2.length === 0) {
+            return array1;
+        }
+
+        // Memeriksa apakah jumlah baris array sama
+        if (array1.length !== array2.length) {
+            console.error("Jumlah baris kedua array harus sama.");
+            return null;
+        }
+
+        // Menggabungkan dua array 2D
+        const mergedArray = [];
+        for (let i = 0; i < array1.length; i++) {
+            mergedArray.push([...array1[i], ...array2[i]]);
+        }
+
+        return mergedArray;
+    }
+
+</script>
+<!-- bootstrap CDN -->
+{% endblock %}

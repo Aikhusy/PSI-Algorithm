@@ -1,0 +1,15 @@
+.content{
+    margin-top: 15px;
+    margin-left: 10px;
+}
+
+.calculator-title h1{
+    color: rgb(35, 35, 35);
+}
+
+.container-create{
+    margin-top: 4rem;
+    display: flex;
+    justify-content: center;
+    gap: 9rem;
+}

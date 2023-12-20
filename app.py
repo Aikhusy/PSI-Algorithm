@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, render_template, jsonify, url_for
 from PSI.Controller import main
 import numpy as np
 
@@ -19,5 +19,14 @@ def process_array():
     # Return the result as JSON
     return jsonify(result)
 
+@app.route('/teori')
+def teori():
+    return render_template('teori.html')
+
+@app.route('/contributor')
+def contributor():
+    return render_template('contributor.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
+
