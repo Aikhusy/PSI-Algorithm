@@ -42,6 +42,21 @@ def countResult(array, priorityWeight):
 
     return result
 
+def countRank(matrix):
+    # Membuat salinan array 2D asli
+    matrix_copy = np.array(matrix)
+
+    # Menggunakan argsort untuk mendapatkan indeks dari nilai terurut
+    sorted_indices = np.argsort(matrix_copy.ravel())[::-1]
+
+    # Membuat array 2D untuk menyimpan rank
+    rank_matrix = np.unravel_index(sorted_indices, matrix_copy.shape)
+
+    # Increment untuk mengubah dari indeks (dimulai dari 0) menjadi rank (dimulai dari 1)
+    rank_matrix = np.array(rank_matrix) + 1
+
+    return rank_matrix
+
 def main(array):
     # konversi ke numpy
     normalisasi = toNumpy(array)#tolist
@@ -57,6 +72,7 @@ def main(array):
     # menghitung perangkingan
     hSum = horizontalSum(result)
     
+    rank= countRank(hSum)
     # Merubah return statement menjadi dictionary dengan key "normalisasi"
     return {"normalisasi": normalisasi.tolist(), 
             "averages": averages.tolist(), 
@@ -64,7 +80,8 @@ def main(array):
             "vSum": vSum.tolist(), 
             "weight": weight.tolist(), 
             "result": result.tolist(),
-            "hSum": hSum
+            "hSum": hSum,
+            "rank": rank.tolist()
             }
             
             

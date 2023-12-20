@@ -110,6 +110,9 @@
                 displayResult(hSum, 'hsum');
                 // Akses properti objek JSON secara terpisah
 
+                var rank = data.rank;
+                createElement("result", 'rank');
+                displayResult(rank, 'rank');
                 // Lakukan operasi atau manipulasi data di sini
             })
             .catch(error => {
