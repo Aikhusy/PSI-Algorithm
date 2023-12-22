@@ -42,17 +42,18 @@ def countResult(array, priorityWeight):
 
     return result
 
-def countRank(matrix):
-    # Membuat pasangan nilai dan indeks dari array
-    indexed_arr = [(value, index) for index, value in enumerate(matrix)]
-    
-    # Mengurutkan array indeks berdasarkan nilai dalam urutan menurun
-    sorted_arr = sorted(indexed_arr, key=lambda x: x[0], reverse=True)
-    
-    # Membuat array ranking dari indeks yang telah diurutkan
-    ranking = [index + 1 for index, _ in enumerate(sorted_arr)]
-    
-    return ranking
+def countRank(arr):
+    # Convert the array to a NumPy array
+    arr = np.array(arr)
+
+    # Get the indices that would sort the array
+    sorted_indices = np.argsort(arr)[::-1]
+
+    # Create an array of ranks
+    ranks = np.empty_like(sorted_indices)
+    ranks[sorted_indices] = np.arange(1, len(arr) + 1)
+
+    return ranks
 
 
 def main2():
@@ -111,7 +112,7 @@ def main2():
             "weight": weight.tolist(), 
             "result": result.tolist(),
             "hSum": hSum,
-            "rank": rank
+            "rank": rank.tolist()
             }
 
 def main(array):
@@ -140,4 +141,5 @@ def main(array):
             "hSum": hSum,
             "rank": rank.tolist()
             }
+              
 print(main2())
