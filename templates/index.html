@@ -53,6 +53,7 @@
         </div>
     </div>
     <button type="button" class="btn btn-outline-success" onclick="submitForm()">Perhitungan</button>
+    <button type="button" class="btn btn-outline-success" onclick="sendArrayToPython2()">SAW</button>
 </form>
 
 <div id="result">
@@ -66,6 +67,61 @@
         elemen.setAttribute("id", nama);
         tempat.appendChild(elemen)
     }
+
+    function sendArrayToPython2(inputArray) {
+        // Kirim array ke server Flask menggunakan AJAX
+        fetch('/SAW', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+            },
+            body: JSON.stringify({ array: inputArray }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response from the server
+                console.log('Data from Python:', data);
+
+                var normalisasi = data.normalisasi;
+                console.log(data.normalisasi);
+                createElement("result", 'normalisasi');
+                displayResult(normalisasi, 'normalisasi');
+
+                var averages = data.averages;
+                createElement("result", 'average');
+                displayResult(averages, 'average');
+
+                var varians = data.varians;
+                createElement("result", 'varians');
+                displayResult(varians, 'varians');
+
+                var vSum = data.vSum;
+                createElement("result", 'vSum');
+                displayResult(vSum, 'vSum');
+
+                var weight = data.weight;
+                createElement("result", 'weight');
+                displayResult(weight, 'weight');
+
+                var result = data.result;
+                createElement("result", 'results');
+                displayResult(result, 'results');
+
+                var hSum = data.hSum;
+                createElement("result", 'hsum');
+                displayResult(hSum, 'hsum');
+                // Akses properti objek JSON secara terpisah
+
+                var rank = data.rank;
+                createElement("result", 'rank');
+                displayResult(rank, 'rank');
+                // Lakukan operasi atau manipulasi data di sini
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
     function sendArrayToPython(inputArray) {
         // Kirim array ke server Flask menggunakan AJAX
         fetch('/process_array', {
@@ -200,6 +256,28 @@
 
         return resultArray;
     }
+
+    function submitForm2() {
+
+        var reshapedCost = getCostElement();
+        console.log("COST", reshapedCost);
+        var floatCost = parseStringArrayToFloat(reshapedCost)
+        console.log("COST", floatCost);
+        var normalizedCost = normalizedCostElement(floatCost);
+
+        displayResult(normalizedCost, "hasilCost");
+
+
+        var reshapedBenefit = getBenefitElement();
+        var floatBenefit = parseStringArrayToFloat(reshapedBenefit);
+        var normalizedBenefit = normalizedBenefitElement(floatBenefit);
+        displayResult(normalizedBenefit, "hasilBenefit");
+        console.log("BENEFIT", reshapedBenefit);
+
+        var merged = merge2DArrays(normalizedBenefit, normalizedCost);
+        console.log(merged)
+        sendArrayToPython2(merged)
+        }
 
     function submitForm() {
 
