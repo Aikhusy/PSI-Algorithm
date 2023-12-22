@@ -1,15 +1,41 @@
-.content{
+.content {
     margin-top: 15px;
     margin-left: 10px;
 }
 
-.calculator-title h1{
+.calculator-title h1 {
     color: rgb(35, 35, 35);
 }
 
-.container-create{
+.container-create {
     margin-top: 4rem;
     display: flex;
     justify-content: center;
     gap: 9rem;
+}
+
+.teori-title{
+    margin-top: 50px;
+}
+
+.teori-title h1{
+    font-weight: bold;
+}
+
+.summary p{
+    color: black;
+    font-size: 20px;
+    text-align: center;
+}
+
+.summary{
+    padding-top: 2rem;
+    padding-left: 200px;
+    padding-right: 200px;
+}
+
+.button-container{
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
 }
